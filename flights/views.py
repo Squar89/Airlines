@@ -1,5 +1,17 @@
-from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Flight
 
 
 def home(request):
-    return HttpResponse("Hello, world. You're at the flights home.")
+    flights_sorted = Flight.objects.order_by('date_dep')
+    context = {
+        'flights_list': flights_sorted
+    }
+    return render(request, 'flights/home.html', context)
+
+
+def detail(request, flight_id):
+    context = {
+        'flight': Flight.objects.get(id=flight_id)
+    }
+    return render(request, 'flights/detail.html', context)

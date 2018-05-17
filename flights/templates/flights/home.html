@@ -1,0 +1,28 @@
+{% extends 'flights/base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+{% if flights_list %}
+    <table>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Airplane</th>
+            <th>Details</th>
+        </tr>
+        {% for flight in flights_list %}
+        <tr>
+            <td>{{ flight.city_from.name }}</td>
+            <td>{{ flight.city_to.name }}</td>
+            <td>{{ flight.date_dep }}</td>
+            <td>{{ flight.date_arr }}</td>
+            <td>{{ flight.airplane.registration }}</td>
+            <td><a href="{% url 'flights:detail' flight.id %}">Click for details</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <b>No flights available</b>
+{% endif %}
+{% endblock %}
