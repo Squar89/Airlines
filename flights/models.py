@@ -31,7 +31,7 @@ class Flight(models.Model):
     city_to = models.ForeignKey(City, on_delete=models.PROTECT, related_name='flights_to')
     date_dep = models.DateTimeField('departure_date')
     date_arr = models.DateTimeField('arrival_date')
-    passengers = models.ManyToManyField(Passenger)
+    passengers = models.ManyToManyField(Passenger, default=[])
 
     def __str__(self):
         return "Flight from %s to %s using plane %s\nLeaves at %s Arrives at %s" \
