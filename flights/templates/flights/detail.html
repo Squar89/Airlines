@@ -8,11 +8,24 @@
     {% if flight.passengers.count > 0 %}
     <p>Passengers registered for this flight:</p>
     <ul>
-        {% for passenger in flight.passengers %}
-            <li>passenger</li>
+        {% for passenger in flight.passengers.all %}
+            <li>{{ passenger }}</li>
         {% endfor %}
     </ul>
     {% else %}
     <p>No passengers registered for this flight</p>
+    {% endif %}
+    {% if user.is_authenticated %}
+        {% if form_result %}
+            <b>{{ form_result }}</b>
+        {% endif %}
+        <form method="post">
+        {% csrf_token %}
+            First name: <input type="text" name="first_name">
+            Last name: <input type="text" name="last_name">
+        <button type="submit">Buy ticket</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'flights:login' %}"> Log in</a> to buy a ticket</p>
     {% endif %}
 {% endblock %}
