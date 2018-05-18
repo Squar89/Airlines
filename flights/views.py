@@ -1,11 +1,32 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Flight, Passenger
+from datetime import datetime
 
 
 def home(request):
-    flights_sorted = Flight.objects.order_by('date_dep')[:30]
+    date_format_hint = 'YYYY-MM-DD hour:minute'
+    try:
+        in_date_from = request.POST['date_from']
+        in_date_to = request.POST['date_to']
+        if (not in_date_from) or (not in_date_to) or (in_date_from == date_format_hint) or (in_date_to == date_format_hint):
+            form_result = "Both fields are required. Try again"
+            flights = Flight.objects.order_by('date_dep')[:30]
+        else:
+            flights = Flight.objects.filter(
+                date_dep__range=(datetime.strptime(in_date_from, '%Y-%m-%d %H:%M'), datetime.strptime(in_date_to, '%Y-%m-%d %H:%M')))\
+                .order_by('date_dep')[:30]
+            form_result = "Filter applied"
+    except ValueError:
+        form_result = "Wrong data format. Use the one given in hint"
+        flights = Flight.objects.order_by('date_dep')[:30]
+    except KeyError:
+        form_result = None
+        flights = Flight.objects.order_by('date_dep')[:30]
+
     context = {
-        'flights_list': flights_sorted,
+        'flights_list': flights,
+        'form_result': form_result,
+        'date_format_hint': date_format_hint,
     }
     return render(request, 'flights/home.html', context)
 

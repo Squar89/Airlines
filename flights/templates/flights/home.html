@@ -1,6 +1,17 @@
 {% extends 'flights/base.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
+    <h2>Filter flights</h2>
+    {% if form_result %}
+        <p>{{ form_result }}</p>
+    {% endif %}
+    <form method="post">
+    {% csrf_token %}
+    Show flights from: <input  type="date" name="date_from" value="{{ date_format_hint }}">
+    Up to: <input type="date" name="date_to" value="{{ date_format_hint }}">
+    <button type="submit">Filter</button>
+    </form>
+    <h2>Upcoming flights</h2>
 {% if flights_list %}
     <table>
         <tr>
