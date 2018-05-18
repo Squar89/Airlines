@@ -32,20 +32,24 @@ def home(request):
 
 
 def detail(request, flight_id):
-    try:
-        flight = get_object_or_404(Flight, pk=flight_id)
-        in_first_name = request.POST['first_name']
-        in_last_name = request.POST['last_name']
-        if (not in_first_name) or (not in_last_name):
-            form_result = "Both fields are required. Try again"
-        elif flight.airplane.capacity == flight.passengers.count():
-            form_result = "Airplane passengers capacity reached. Try buying ticket for other flight"
-        else:
-            passenger = Passenger(first_name=in_first_name, last_name=in_last_name)
-            passenger.save()
-            flight.passengers.add(passenger)
-            form_result = "Success! Your name should appear on passengers list"
-    except KeyError:
+    if request.user.is_authenticated:
+        try:
+            #atomic transaction zeby uniknac data race
+            flight = get_object_or_404(Flight, pk=flight_id)
+            in_first_name = request.POST['first_name']
+            in_last_name = request.POST['last_name']
+            if (not in_first_name) or (not in_last_name):
+                form_result = "Both fields are required. Try again"
+            elif flight.airplane.capacity == flight.passengers.count():
+                form_result = "Airplane passengers capacity reached. Try buying ticket for other flight"
+            else:
+                passenger = Passenger(first_name=in_first_name, last_name=in_last_name)
+                passenger.save()
+                flight.passengers.add(passenger)
+                form_result = "Success! Your name should appear on passengers list"
+        except KeyError:
+            form_result = None
+    else:
         form_result = None
 
     context = {

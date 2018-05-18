@@ -41,13 +41,10 @@ def delete_cities():
 
 def generate_airplanes():
     for _ in range(0, 50):
-        try:
-            q = Airplane(registration=reg_gen(), capacity=random.randrange(20, 100))
-        except:
-            #unlucky, we generated the same registration twice
-            time.sleep(2)
-            q = Airplane(registration=reg_gen(), capacity=random.randrange(20, 100))
-            #what are the odds for that happening again, right?
+        next_reg = reg_gen()
+        while Airplane.objects.filter(registration=next_reg).count() > 0:
+            next_reg = reg_gen()
+        q = Airplane(registration=next_reg, capacity=random.randrange(20, 100))
         q.save()
 
 
@@ -58,9 +55,11 @@ def delete_airplanes():
 def generate_flights():
     for airplane in Airplane.objects.all():
         city_from = City.objects.get(name=random.choice(cities))
+        city_to = city_from
         date_dep = timezone.now() + datetime.timedelta(hours=random.randrange(0, 50), minutes=random.randrange(0, 60))
         for i in range(0, 50):
-            city_to = City.objects.get(name=random.choice(cities))
+            while city_to == city_from:
+                city_to = City.objects.get(name=random.choice(cities))
             time_taken = random.randrange(30, 300)
             date_arr = date_dep + datetime.timedelta(minutes=time_taken)
 
