@@ -34,5 +34,4 @@ class Flight(models.Model):
     passengers = models.ManyToManyField(Passenger, default=[])
 
     def __str__(self):
-        return "Flight from %s to %s using plane %s\nLeaves at %s Arrives at %s" \
-               % (self.city_from, self.city_to, self.airplane, self.date_dep, self.date_arr)
+        return "Flight from %s to %s" % (self.city_from, self.city_to)
