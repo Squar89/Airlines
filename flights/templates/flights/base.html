@@ -2,12 +2,24 @@
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
 </head>
 <body>
+<header>
 {% block navigation %}
-    TODO nav
+    <nav>
+    <a href="{% url 'flights:home' %}">Home page</a> |
+    {% if user.is_authenticated %}
+        Welcome {{ user.username }}! <a href="{% url 'flights:logout' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'flights:login' %}">Login</a>
+    {% endif %}
+    </nav>
 {% endblock %}
+</header>
+<main>
 {% block content %}
 {% endblock %}
+</main>
 </body>
 </html>
