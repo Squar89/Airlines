@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Flight, Passenger
 from datetime import datetime
+from django.db import transaction
 
 
 def home(request):
@@ -34,7 +35,6 @@ def home(request):
 def detail(request, flight_id):
     if request.user.is_authenticated:
         try:
-            #atomic transaction zeby uniknac data race
             flight = get_object_or_404(Flight, pk=flight_id)
             in_first_name = request.POST['first_name']
             in_last_name = request.POST['last_name']
@@ -43,10 +43,11 @@ def detail(request, flight_id):
             elif flight.airplane.capacity == flight.passengers.count():
                 form_result = "Airplane passengers capacity reached. Try buying ticket for other flight"
             else:
-                passenger = Passenger(first_name=in_first_name, last_name=in_last_name)
-                passenger.save()
-                flight.passengers.add(passenger)
-                form_result = "Success! Your name should appear on passengers list"
+                with transaction.atomic():
+                    passenger = Passenger(first_name=in_first_name, last_name=in_last_name)
+                    passenger.save()
+                    flight.passengers.add(passenger)
+                    form_result = "Success! Your name should appear on passengers list"
         except KeyError:
             form_result = None
     else:
