@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Flight, Passenger
+from .models import Flight, Passenger, Crew
 from datetime import datetime
 from django.db import transaction
+from .serializers import CrewSerializer, FlightSerializer
+from django.http import JsonResponse
 
 
 def home(request):
@@ -58,3 +60,17 @@ def detail(request, flight_id):
         'form_result': form_result,
     }
     return render(request, 'flights/detail.html', context)
+
+
+def crew_view(request):
+    crew_objects = Crew.objects.all()
+    crew_serializer = CrewSerializer(crew_objects, many=True)
+
+    return JsonResponse(crew_serializer.data, safe=False)
+
+
+def flights_view(request):
+    flight_objects = Flight.objects.all()
+    flight_serializer = FlightSerializer(flight_objects, many=True)
+
+    return JsonResponse(flight_serializer.data, safe=False)
