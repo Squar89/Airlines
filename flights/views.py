@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from django.db import transaction
 from .serializers import CrewSerializer, FlightSerializer
 from django.http import JsonResponse
+from django.db.models import Q
 
 
 def home(request):
@@ -69,22 +70,34 @@ def crews(request):
     crew_objects = Crew.objects.all()
     crew_serializer = CrewSerializer(crew_objects, many=True)
 
-    if request.method == 'GET' and request.GET['date']:
-        date = request.GET['date']
-        flight_objects = Flight.objects.filter(date_dep__range=(datetime.strptime(date, '%Y-%m-%d'),
+    if request.method == 'GET' and 'date' in request.GET and request.GET['date'] is not None:
+        try:
+            date = request.GET['date']
+            flight_objects = Flight.objects.filter(date_dep__range=(datetime.strptime(date, '%Y-%m-%d'),
                                                datetime.strptime(date, '%Y-%m-%d') + timedelta(hours=23, minutes=59)))
-    elif request.method == 'POST':
-        #crew = Crew.objects.get(id=request.POST['crew_id'])
-        #flight = Flight.objects.get(id=request.POST['flight_id'])
+        except ValueError:
+            flight_objects = None
+    elif request.method == 'POST' and 'crew_id' in request.POST and request.POST['crew_id'] is not None \
+                                  and 'flight_id' in request.POST and request.POST['flight_id'] is not None:
+        if request.user.is_authenticated:
+            with transaction.atomic():
+                crew = Crew.objects.get(id=request.POST['crew_id'])
+                flight = Flight.objects.get(id=request.POST['flight_id'])
 
-        #TODO logic to determine if crew can be assigned to this flight
-
-        result = {'success': 1, 'message': ""}
-
+                collisions = Flight.objects.filter(crew=crew).filter((Q(date_dep__range=(flight.date_dep, flight.date_arr)) |
+                                                   Q(date_arr__range=(flight.date_dep, flight.date_arr))) |
+                                                   (Q(date_dep__lte=flight.date_dep) & Q(date_arr__gte=flight.date_arr)))
+                if not collisions:
+                    flight.crew = crew
+                    flight.save()
+                    result = {'success': 1, 'message': ""}
+                else:
+                    result = {'success': 0, 'message': "This crew is busy during that flight, try another"}
+        else:
+            result = {'success': 0, 'message': "You need to be logged in to do this"}
         return JsonResponse(result)
     else:
         flight_objects = Flight.objects.all()
-
     flight_serializer = FlightSerializer(flight_objects, many=True)
 
     return JsonResponse({"flights": flight_serializer.data, "crews": crew_serializer.data}, safe=False)
