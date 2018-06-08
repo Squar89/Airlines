@@ -12,16 +12,37 @@ window.addEventListener("load", function() {
                 var select = prepareSelect(data);
                 document.getElementById("content_assign").innerHTML = select;
                 document.getElementById("show_assign").style.display = "block";
-            } else {
+            }
+            else {
                 alert("Error (status: " + req.status + ")");
             }
         });
         req.open("GET", "/flights/crews?date=" + document.getElementById("s_day").value, true);
         req.send();
-    })
+    });
 
     document.getElementById("assign").addEventListener("click", function () {
+        var req = new XMLHttpRequest();
+        req.addEventListener("load", function () {
+            if (req.status === 200) {
+                var data = JSON.parse(req.responseText);
 
+                if (data['success'] === 1) {
+                    document.getElementById("result_message").innerText = "Crew assigned successfully";
+                    document.getElementById("result_message").style.display = "block";
+                }
+                else {
+                    alert("Error: " + data['message']);
+                }
+            }
+            else {
+                alert("Error (status: " + req.status + ")");
+            }
+        });
+        req.open("POST", "/flights/crews?date=", true);
+        var flight_id = document.getElementById("flight_select").value;
+        var crew_id = document.getElementById("crew_select").value;
+        req.send("flight_id=" + encodeURIComponent(flight_id) + "&crew_id=" + encodeURIComponent(crew_id));
     })
 });
 
@@ -48,14 +69,14 @@ function prepareTable(data) {
 }
 
 function prepareSelect(data) {
-    var ret_string = "Flight id: <select>";
+    var ret_string = "Flight id: <select id='flight_select'>";
     var i;
     for (i = 0; i < data["flights"].length; i++) {
         ret_string += "<option value='" + data["flights"][i].id + "'>" + data["flights"][i].id + "</option>"
     }
     ret_string += "</select>";
 
-    ret_string += "<select>";
+    ret_string += "<select id='crew_select'>";
     for (i = 0; i < data['crews'].length; i++) {
         ret_string += "<option value='" + data['crews'][i].id + "'>" + data['crews'][i].c_first_name + " " +
                        data['crews'][i].c_last_name + "</option>"

@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import Flight, Passenger, Crew
 from datetime import datetime, timedelta
 from django.db import transaction
@@ -62,20 +64,27 @@ def detail(request, flight_id):
     return render(request, 'flights/detail.html', context)
 
 
+@csrf_exempt
 def crews(request):
+    crew_objects = Crew.objects.all()
+    crew_serializer = CrewSerializer(crew_objects, many=True)
+
     if request.method == 'GET' and request.GET['date']:
         date = request.GET['date']
         flight_objects = Flight.objects.filter(date_dep__range=(datetime.strptime(date, '%Y-%m-%d'),
                                                datetime.strptime(date, '%Y-%m-%d') + timedelta(hours=23, minutes=59)))
     elif request.method == 'POST':
-        flight_objects = Flight.objects.all()
+        #crew = Crew.objects.get(id=request.POST['crew_id'])
+        #flight = Flight.objects.get(id=request.POST['flight_id'])
+
+        #TODO logic to determine if crew can be assigned to this flight
+
+        result = {'success': 1, 'message': ""}
+
+        return JsonResponse(result)
     else:
         flight_objects = Flight.objects.all()
 
-    crew_objects = Crew.objects.all()
-    crew_serializer = CrewSerializer(crew_objects, many=True)
-
     flight_serializer = FlightSerializer(flight_objects, many=True)
 
-    #return JsonResponse(flight_serializer.data, safe=False)
     return JsonResponse({"flights": flight_serializer.data, "crews": crew_serializer.data}, safe=False)
