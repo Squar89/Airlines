@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crews information</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/flights/static/crews.js"></script>
+</head>
+<body>
+<main>
+</main>
+    <h1>Information about flight crews</h1>
+    <section>
+        <h2>Select day</h2>
+        <p>Show flights on day: <input type="date" id="s_day" value="YYYY-MM-DD"></p>
+        <p><button id="submit">Show</button></p>
+    </section>
+    <section id="show_assign" style="display: none">
+        <h2>Assign crew</h2>
+        <div id="content_assign"></div>
+        <p><button id='assign'>Assign</button></p>
+    </section>
+    <section id="show_flights" style="display: none">
+        <h2>Selected flights</h2>
+        <div id="content_flights"></div>
+    </section>
+</body>
+</html>

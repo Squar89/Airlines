@@ -1,13 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Flight, Passenger, Crew
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db import transaction
 from .serializers import CrewSerializer, FlightSerializer
 from django.http import JsonResponse
 
 
 def home(request):
-    date_format_hint = 'YYYY-MM-DD hour:minute'
+    date_format_hint = 'YYYY-MM-DD'
     try:
         in_date_from = request.POST['date_from']
         in_date_to = request.POST['date_to']
@@ -16,11 +16,11 @@ def home(request):
             flights = Flight.objects.order_by('date_dep')[:30]
         else:
             flights = Flight.objects.filter(
-                date_dep__range=(datetime.strptime(in_date_from, '%Y-%m-%d %H:%M'), datetime.strptime(in_date_to, '%Y-%m-%d %H:%M')))\
+                date_dep__range=(datetime.strptime(in_date_from, '%Y-%m-%d'), datetime.strptime(in_date_to, '%Y-%m-%d')))\
                 .order_by('date_dep')[:30]
             form_result = "Filter applied"
     except ValueError:
-        form_result = "Wrong data format. Use the one given in hint"
+        form_result = "Wrong data format. Use the one given in hint (" + date_format_hint + ")"
         flights = Flight.objects.order_by('date_dep')[:30]
     except KeyError:
         form_result = None
@@ -62,15 +62,20 @@ def detail(request, flight_id):
     return render(request, 'flights/detail.html', context)
 
 
-def crew_view(request):
+def crews(request):
+    if request.method == 'GET' and request.GET['date']:
+        date = request.GET['date']
+        flight_objects = Flight.objects.filter(date_dep__range=(datetime.strptime(date, '%Y-%m-%d'),
+                                               datetime.strptime(date, '%Y-%m-%d') + timedelta(hours=23, minutes=59)))
+    elif request.method == 'POST':
+        flight_objects = Flight.objects.all()
+    else:
+        flight_objects = Flight.objects.all()
+
     crew_objects = Crew.objects.all()
     crew_serializer = CrewSerializer(crew_objects, many=True)
 
-    return JsonResponse(crew_serializer.data, safe=False)
-
-
-def flights_view(request):
-    flight_objects = Flight.objects.all()
     flight_serializer = FlightSerializer(flight_objects, many=True)
 
-    return JsonResponse(flight_serializer.data, safe=False)
+    #return JsonResponse(flight_serializer.data, safe=False)
+    return JsonResponse({"flights": flight_serializer.data, "crews": crew_serializer.data}, safe=False)
