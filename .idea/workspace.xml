@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="92b9f9f5-7e00-4e24-8ccf-f8718899bc57" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/flights/static/crews.html" beforeDir="false" afterPath="$PROJECT_DIR$/flights/static/crews.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flights/static/crews.js" beforeDir="false" afterPath="$PROJECT_DIR$/flights/static/crews.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flights/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/flights/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -42,10 +40,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/flights/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
+            <state relative-caret-position="253">
               <caret line="77" column="9" selection-start-line="77" selection-start-column="9" selection-end-line="77" selection-end-column="9" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
@@ -68,11 +66,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="crews.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="crews.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/flights/static/crews.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="30" column="100" selection-start-line="30" selection-start-column="100" selection-end-line="30" selection-end-column="100" />
+            <state relative-caret-position="-281">
+              <caret line="4" column="30" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -161,8 +159,8 @@
         <option value="$PROJECT_DIR$/flights/models.py" />
         <option value="$PROJECT_DIR$/flights/serializers.py" />
         <option value="$PROJECT_DIR$/flights/views.py" />
-        <option value="$PROJECT_DIR$/flights/static/crews.html" />
         <option value="$PROJECT_DIR$/flights/static/crews.js" />
+        <option value="$PROJECT_DIR$/flights/static/crews.html" />
       </list>
     </option>
   </component>
@@ -610,13 +608,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/flights/views.py">
+    <entry file="file://$PROJECT_DIR$/flights/static/crews.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="77" column="9" selection-start-line="77" selection-start-column="9" selection-end-line="77" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-281">
+          <caret line="4" column="30" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
         </state>
       </provider>
     </entry>
@@ -632,10 +627,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/flights/static/crews.js">
+    <entry file="file://$PROJECT_DIR$/flights/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="30" column="100" selection-start-line="30" selection-start-column="100" selection-end-line="30" selection-end-column="100" />
+        <state relative-caret-position="253">
+          <caret line="77" column="9" selection-start-line="77" selection-start-column="9" selection-end-line="77" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

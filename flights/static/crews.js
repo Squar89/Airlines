@@ -2,7 +2,7 @@ window.addEventListener("load", function() {
     document.getElementById("submit").addEventListener("click", function() {
         var req = new XMLHttpRequest();
         req.addEventListener("load", function() {
-            if (req.status == 200) {
+            if (req.status === 200) {
                 var data = JSON.parse(req.responseText);
 
                 var table = prepareTable(data);
