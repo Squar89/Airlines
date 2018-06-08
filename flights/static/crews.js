@@ -22,10 +22,10 @@ window.addEventListener("load", function() {
     });
 
     document.getElementById("assign").addEventListener("click", function () {
-        var req = new XMLHttpRequest();
-        req.addEventListener("load", function () {
-            if (req.status === 200) {
-                var data = JSON.parse(req.responseText);
+        var requ = new XMLHttpRequest();
+        requ.addEventListener("load", function () {
+            if (requ.status === 200) {
+                var data = JSON.parse(requ.responseText);
 
                 if (data['success'] === 1) {
                     document.getElementById("result_message").innerText = "Crew assigned successfully";
@@ -36,13 +36,14 @@ window.addEventListener("load", function() {
                 }
             }
             else {
-                alert("Error (status: " + req.status + ")");
+                alert("Error (status: " + requ.status + ")");
             }
         });
-        req.open("POST", "/flights/crews?date=", true);
+        requ.open("POST", "/flights/crews", true);
+        requ.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         var flight_id = document.getElementById("flight_select").value;
         var crew_id = document.getElementById("crew_select").value;
-        req.send("flight_id=" + encodeURIComponent(flight_id) + "&crew_id=" + encodeURIComponent(crew_id));
+        requ.send("flight_id=" + encodeURIComponent(flight_id) + "&crew_id=" + encodeURIComponent(crew_id));
     })
 });
 
